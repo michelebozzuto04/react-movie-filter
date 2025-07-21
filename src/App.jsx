@@ -1,5 +1,5 @@
 import './index.css'
-import movies from './data/movies'
+import initial_movies from './data/movies'
 import { useEffect, useState } from 'react';
 
 const genres = [
@@ -14,22 +14,29 @@ const genres = [
 function App() {
 
   const [selectedGenre, setSelectedGenre] = useState(genres[0]);
-  const [movieList, setMovieList] = useState(movies);
-  const [filteredMovies, setFilteredMovies] = useState(movieList);
-  const [searchInput, setSearchInput] = useState("");
+
+  const [movies, setMovies] = useState(initial_movies);
+  const [filteredMovies, setFilteredMovies] = useState(movies);
   const [searchResults, setSearchResults] = useState(filteredMovies);
 
-  useEffect(() => {
-    selectedGenre === "All" ?
-      setMovieList(movies)
-      :
-      setMovieList(filteredMovies.filter(movie => movie.genre === selectedGenre))
-  }, [selectedGenre])
+  const [searchInput, setSearchInput] = useState('');
 
   useEffect(() => {
-    filteredMovies.map(movie => movie.title.toLowerCase())
-    setMovieList(filteredMovies.filter(movie => movie.title.includes(searchInput.toLowerCase())))
-  }, [searchInput])
+    const filtered = movies.filter(movie => movie.genre === selectedGenre);
+
+    selectedGenre === "All" ?
+      setFilteredMovies(movies)
+      :
+      setFilteredMovies(filtered)
+
+  }, [selectedGenre, movies, searchInput])
+
+  useEffect(() => {
+    const filtered = filteredMovies.filter(movie => movie.title.includes(searchInput));
+
+    setSearchResults(filtered)
+
+  }, [filteredMovies, searchInput])
 
   console.log(searchInput)
 
@@ -50,7 +57,7 @@ function App() {
       <hr />
       <p>Your selected: {selectedGenre}</p>
       <ul>
-        {movieList.map((movie, index) => {
+        {searchResults.map((movie, index) => {
           return (
             <li key={index}>{movie.title}</li>
           )
