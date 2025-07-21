@@ -32,7 +32,7 @@ function App() {
   }, [selectedGenre, movies, searchInput])
 
   useEffect(() => {
-    const filtered = filteredMovies.filter(movie => movie.title.includes(searchInput));
+    const filtered = filteredMovies.filter(movie => movie.title.toLowerCase().includes(searchInput.toLowerCase()));
 
     setSearchResults(filtered)
 
